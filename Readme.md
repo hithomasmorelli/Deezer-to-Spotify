@@ -2,11 +2,11 @@
 
 This Python script will (soon) transfer your Deezer playlists to Spotify. It is heavily based on [@iloveicedgreentea's repo](https://github.com/iloveicedgreentea/GPM-to-Spotify) for doing the same thing with Google Play Music.
 
-My reasons for writing this are the same as the original ones, those being:
+My reasons for coding this are basically the same as the motives behind the original repo:
 
-1) I was moving to Spotify and there was no way I would transfer 4000 songs by hand
-2) Couldn't find anything open source that actually did this
-3) Anything that claimed to do this cost money and (more importantly) was not trustworthy
+1) I was moving to Spotify and there was no way I would transfer loads of songs by hand
+2) Couldn't find much in the way of open source that actually did this
+3) Anything that claimed to do this either cost money, was not trustworthy, or both
 
 This runs locally and absolutely zero information is sent to me or anyone else. Hopefully this saves someone time and money.
 
