@@ -65,8 +65,8 @@ Some improvements could be made such as combining the two main python files, add
 Feel free to fork and/or open a GH issue
 
 ## Credits
-[gmusicapi](https://github.com/simon-weber/gmusicapi)
+[deezer-python](https://github.com/browniebroke/deezer-python)
 
 [spotipy](https://github.com/plamere/spotipy)
 
-python-dotenv
+[python-dotenv](https://github.com/theskumar/python-dotenv)
