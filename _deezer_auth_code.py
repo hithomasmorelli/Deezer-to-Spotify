@@ -1,6 +1,6 @@
 ##
 ## THIS CODE IS EXTRACTED AND MODIFIED FROM 
-## https://github.com/helpsterTee/spotify-playlists-2-deezer/blob/b6e3621b4b778ab11a8ce59d0973c603fda99e2d/spotify-restore.py
+## https://github.com/helpsterTee/spotify-playlists-2-deezer/blob/b6e3621b4b778ab11a8ce59d0973c603fda99e2d/spotify-restore.py#L143-L200
 ##
 ## ACCORDINGLY, THE REPOSITORY LICENSE DOES NOT APPLY TO THIS FILE,
 ## AND THE FOLLOWING LICENSE (FROM https://github.com/helpsterTee/spotify-playlists-2-deezer/blob/85a405dbf6df161cf63a89494a7009915e5ade25/LICENSE)
