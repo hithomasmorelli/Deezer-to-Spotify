@@ -2,6 +2,8 @@
 
 This Python script will (soon) transfer your Deezer playlists to Spotify. It is heavily based on [@iloveicedgreentea's repo](https://github.com/iloveicedgreentea/GPM-to-Spotify) for doing the same thing with Google Play Music.
 
+***This script is very clanky, so beware & treat it with care.***
+
 My reasons for coding this are basically the same as the motives behind the original repo:
 
 1) I was moving to Spotify and there was no way I would transfer loads of songs by hand
@@ -17,9 +19,11 @@ This runs locally and absolutely zero information is sent to me or anyone else. 
 * Deezer and Spotify accounts
 
 ## Setup
-1) Go to the [developer page](https://developer.spotify.com/dashboard/), make an app/client_id. Add your redirect URL as `http://localhost/`
-2) `mv .env.example .env`
-3) Populate .env with client_id, secret, redirect url, and username (found when you login online)
+1) Go to the [Spotify developer page](https://developer.spotify.com/dashboard/) and make a new app. Add your redirect URL as `http://localhost/`
+2) Go to the [Deezer developer page](https://developers.deezer.com/myapps) and make a new app. Add the domain as `localhost` and the redirect URL as `http://localhost:8080/authfinish`
+3) `cp .env.example .env`
+4) Populate .env with Spotify client ID, secret, redirect url, and username (found when you login online)
+5) Populate .env with Deezer app ID and secret key
 
 
 ## Usage
@@ -30,7 +34,7 @@ pipenv run python3 main.py
 
 You may want to redirect output to a file. This spits out a ton of logs to stdout. Up to you.
 ```bash
-pipenv run python3 main.py >main.log
+pipenv run python3 main.py > main.log
 ```
 
 ### Transferring thumbs up to library
@@ -65,8 +69,11 @@ Some improvements could be made such as combining the two main python files, add
 Feel free to fork and/or open a GH issue
 
 ## Credits
-[deezer-python](https://github.com/browniebroke/deezer-python)
 
-[spotipy](https://github.com/plamere/spotipy)
+### Libraries
+* [deezer-python](https://github.com/browniebroke/deezer-python)
+* [spotipy](https://github.com/plamere/spotipy)
+* [python-dotenv](https://github.com/theskumar/python-dotenv)
 
-[python-dotenv](https://github.com/theskumar/python-dotenv)
+### Other Credits
+Thanks to [@helpsterTee](https://github.com/helpsterTee), whose [code](https://github.com/helpsterTee/spotify-playlists-2-deezer/blob/b6e3621b4b778ab11a8ce59d0973c603fda99e2d/spotify-restore.py#L143-L200) I modified for Deezer authentication. That code is in the file [`_deezer_auth_code.py`](/_deezer_auth_code.py), and has a different license (specified within the file) to the rest of the repository.

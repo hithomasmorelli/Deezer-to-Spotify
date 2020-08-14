@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-from gmusicapi import Mobileclient
-from spotipy import Spotify, util, client
+#from gmusicapi import Mobileclient
+from spotipy import Spotify, SpotifyOAuth
+from _deezer_auth_code import authorize as deezer_authorize
+from deezer import Client as Deezer
 from dotenv import load_dotenv
 from os import getenv
 import logging
@@ -28,8 +30,8 @@ class Spotify_client:
 
         # login
         logging.info("Starting Spotify client")
-        token = util.prompt_for_user_token(self.username,scope,client_id=client_id,client_secret=client_secret,redirect_uri=redirect_uri)
-        self.sp_client = Spotify(auth=token)
+        auth_manager = SpotifyOAuth(client_id=client_id, client_secret=client_secret, scope=scope, redirect_uri=redirect_uri, username=self.username)
+        self.sp_client = Spotify(auth_manager=auth_manager)
 
     def create_playlist(self, playlist_name):
         logging.debug(f'playlist_name: {playlist_name}')
@@ -45,20 +47,19 @@ class Spotify_client:
   
 
 #################
-# GPM
+# Deezer
 #################
-class GPM_client:
+class Deezer_client:
     def __init__(self):
-        logging.info("Starting GPM client")
-        self.gpm_client = Mobileclient()
+        deezer_app_id = getenv("DEEZER_application_id")
+        deezer_secret_key = getenv("DEEZER_secret_key")
+        scope = "basic_access,manage_library"
 
         # login
-        if self.gpm_client.is_authenticated():
-            logging.info("Logging you in...")
-            self.gpm_client.oauth_login(device_id=Mobileclient.FROM_MAC_ADDRESS)
-        else:
-            logging.debug("No previous credentials - performing Oauth")
-            self.gpm_client.perform_oauth(open_browser=True)
+        logging.info("Starting Deezer client")
+        self.deezer_client = Deezer(access_token=deezer_authorize(deezer_app_id, deezer_secret_key, scope))
+
+
    
 
 #################
@@ -73,12 +74,12 @@ def main():
     '''
 
      # load env
-    logging.debug('Loading env')
+    logging.debug('loading env')
     load_env()
 
-    # initialize GPM
-    logging.debug('loading GPM')
-    gpm = GPM_client()
+    # initialize Deezer
+    logging.debug('loading Deezer')
+    deezer = Deezer_client()
 
     # initialize spotify
     logging.debug('loading Spotify')
