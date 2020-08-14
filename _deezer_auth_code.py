@@ -41,11 +41,11 @@ import urllib.request
 import webbrowser
 
 ## Authorize code
-def authorize(app_id, secret):
+def authorize(app_id, secret, scope):
 	webbrowser.open('https://connect.deezer.com/oauth/auth.php?' + urllib.parse.urlencode({
 		'app_id': app_id,
 		'redirect_uri': 'http://localhost:8080/authfinish',
-		'perms': 'basic_access,manage_library'
+		'perms': scope
 	}))
 
 	# Start a simple, local HTTP server to listen for the authorization token... (i.e. a hack).
