@@ -41,7 +41,7 @@ import urllib.request
 import webbrowser
 
 ## Authorize code
-def authorize(app_id, secret, scope):
+def authorize(app_id, secret, scope="basic_access,manage_library"):
 	webbrowser.open('https://connect.deezer.com/oauth/auth.php?' + urllib.parse.urlencode({
 		'app_id': app_id,
 		'redirect_uri': 'http://localhost:8080/authfinish',
