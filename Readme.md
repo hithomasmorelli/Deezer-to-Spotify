@@ -23,7 +23,7 @@ This script adds the songs to Spotify playlists in the order they were added to 
 * Deezer and Spotify accounts
 
 ## Setup
-1) Go to the [Spotify developer page](https://developer.spotify.com/dashboard/) and make a new app. Add your redirect URL as `http://localhost:8000/`
+1) Go to the [Spotify developer page](https://developer.spotify.com/dashboard/) and make a new app. Add your redirect URL as `http://localhost:8080/`
 2) Go to the [Deezer developer page](https://developers.deezer.com/myapps) and make a new app. Add the domain as `localhost` and the redirect URL as `http://localhost:8080/authfinish`
 3) `cp .env.example .env`
 4) Populate .env with Spotify client ID, secret, redirect url, and username (found when you login online)
