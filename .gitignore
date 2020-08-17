@@ -5,4 +5,4 @@ test.py
 *.log
 playlist_dump
 .DS_Store
-
+*.pyc

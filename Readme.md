@@ -1,6 +1,6 @@
 # Deezer to Spotify Playlist Transfer Tool
 
-This Python script will (soon) transfer your Deezer playlists to Spotify. It is heavily based on [@iloveicedgreentea's repo](https://github.com/iloveicedgreentea/GPM-to-Spotify) for doing the same thing with Google Play Music.
+This Python script will transfer your Deezer playlists to Spotify. It is heavily based on [@iloveicedgreentea's repo](https://github.com/iloveicedgreentea/GPM-to-Spotify) for doing the same thing with Google Play Music.
 
 ***This script is very clanky, so beware & treat it with care.***
 
@@ -12,6 +12,10 @@ My reasons for coding this are basically the same as the motives behind the orig
 
 This runs locally and absolutely zero information is sent to me or anyone else. Hopefully this saves someone time and money.
 
+**NOTE**: *Unlike the base repository*, the code to transfer the "Favourite Tracks* library is contained within `main.py`, instead of a seperate file.
+
+This script adds the songs to Spotify playlists in the order they were added to the Deezer playlists. However, adding songs one-after-another without a pause leads to Spotify getting confused as to the order a group of songs were added in. For this reason, the program asks whether or not it should pause for a set amount of time (currently 0.95 seconds) to better ensure the integrity of "sort by addition".
+
 ## Requirements
 
 * Python 3.7
@@ -19,7 +23,7 @@ This runs locally and absolutely zero information is sent to me or anyone else. 
 * Deezer and Spotify accounts
 
 ## Setup
-1) Go to the [Spotify developer page](https://developer.spotify.com/dashboard/) and make a new app. Add your redirect URL as `http://localhost/`
+1) Go to the [Spotify developer page](https://developer.spotify.com/dashboard/) and make a new app. Add your redirect URL as `http://localhost:8000/`
 2) Go to the [Deezer developer page](https://developers.deezer.com/myapps) and make a new app. Add the domain as `localhost` and the redirect URL as `http://localhost:8080/authfinish`
 3) `cp .env.example .env`
 4) Populate .env with Spotify client ID, secret, redirect url, and username (found when you login online)
@@ -37,19 +41,6 @@ You may want to redirect output to a file. This spits out a ton of logs to stdou
 pipenv run python3 main.py > main.log
 ```
 
-### Transferring thumbs up to library
-GPM and Spotify have a similar way of storing "liked" music but it requires a different way to process it.
-
-Heres a quick way to transfer it:
-
-1) Play your thumbs up playlist
-2) Open the queue, save queue to a playlist
-3) Note the name you gave it, enter it below
-
-```bash
-pipenv run python3 thumbs_up.py [name of thumbs up playlist]
-```
-
 ## Known Issues
 Spotify doesn't care about unique playlist names. You can have duplicates so be aware if you run this multiple times.
 
@@ -60,8 +51,6 @@ If songs are missing, it's likely they don't exist on Spotify. Its also possible
 Spotify seems to give random 500s, can't do much about it. Seems to be rare. The script will write the failed tracks to `errored-tracks.log`
 
 You might hit a rate limit. I tried on a premium account with thousands of songs and was okay.
-
-There might be issues with GPM and playlists with over 1k songs. This has not been tested
 
 Some improvements could be made such as combining the two main python files, adding flags, etc but this would take more time than it is worth considering I needed to transfer some songs once.
 
