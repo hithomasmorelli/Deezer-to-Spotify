@@ -12,7 +12,7 @@ My reasons for coding this are basically the same as the motives behind the orig
 
 This runs locally and absolutely zero information is sent to me or anyone else. Hopefully this saves someone time and money.
 
-**NOTE**: *Unlike the base repository*, the code to transfer the "Favourite Tracks* library is contained within `main.py`, instead of a seperate file.
+**NOTE**: *Unlike the base repository*, the code to transfer the "Favourite Tracks" library is contained within `main.py`, instead of a seperate file.
 
 This script adds the songs to Spotify playlists in the order they were added to the Deezer playlists. However, adding songs one-after-another without a pause leads to Spotify getting confused as to the order a group of songs were added in. For this reason, the program asks whether or not it should pause for a set amount of time (currently 0.95 seconds) to better ensure the integrity of "sort by addition".
 
