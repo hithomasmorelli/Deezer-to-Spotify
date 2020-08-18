@@ -4,5 +4,4 @@ test.py
 .cache*
 *.log
 playlist_dump
-.DS_Store
 *.pyc
