@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "13cc324628f229863cfb3d781bf813f28f3ed3ef6926bd581c3054204eee9fbc"
+            "sha256": "84d5bc8d8d65af467617be26a56e1daa895ecbde590155e049b40085d2c85175"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,12 +31,8 @@
             "version": "==3.0.4"
         },
         "deezer-python": {
-            "hashes": [
-                "sha256:225c3aa5facec675ada8bddd3f48587a10c21f3c14732571f049af5f26dee50a",
-                "sha256:67ba7bf50668e5d6ff267bc5f7ea1bae6b963446e7ed7f7ee5cc735576a62a4a"
-            ],
-            "index": "pypi",
-            "version": "==1.5.0"
+            "git": "https://github.com/hithomasmorelli/deezer-python.git",
+            "ref": "96ff6bc3df26d6025cbf069b420aeae043d23c39"
         },
         "idna": {
             "hashes": [
