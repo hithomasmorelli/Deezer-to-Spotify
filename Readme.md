@@ -62,10 +62,13 @@ Feel free to fork and/or open a GH issue
 
 ## Credits
 
+### Original Repository
+This repository is based on [iloveicedgreentea/GPM-to-Spotify](https://github.com/iloveicedgreentea/GPM-to-Spotify), without which I would have never got around to doing this.
+
+### Other Credits
+Thanks to [@helpsterTee](https://github.com/helpsterTee), whose [code](https://github.com/helpsterTee/spotify-playlists-2-deezer/blob/b6e3621b4b778ab11a8ce59d0973c603fda99e2d/spotify-restore.py#L143-L200) I modified for Deezer authentication. That code is in the file [`_deezer_auth_code.py`](/_deezer_auth_code.py), and has a different license (specified within the file) to the rest of the repository.
+
 ### Libraries
 * [deezer-python](https://github.com/browniebroke/deezer-python)
 * [spotipy](https://github.com/plamere/spotipy)
 * [python-dotenv](https://github.com/theskumar/python-dotenv)
-
-### Other Credits
-Thanks to [@helpsterTee](https://github.com/helpsterTee), whose [code](https://github.com/helpsterTee/spotify-playlists-2-deezer/blob/b6e3621b4b778ab11a8ce59d0973c603fda99e2d/spotify-restore.py#L143-L200) I modified for Deezer authentication. That code is in the file [`_deezer_auth_code.py`](/_deezer_auth_code.py), and has a different license (specified within the file) to the rest of the repository.
