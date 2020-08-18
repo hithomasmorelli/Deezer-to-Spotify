@@ -16,6 +16,8 @@ This runs locally and absolutely zero information is sent to me or anyone else. 
 
 This script adds the songs to Spotify playlists in the order they were added to the Deezer playlists. However, adding songs one-after-another without a pause leads to Spotify getting confused as to the order a group of songs were added in. For this reason, the program asks whether or not it should pause for a set amount of time (currently 0.95 seconds) to better ensure the integrity of "sort by addition".
 
+The script will ask if, when it encounters a failed track, it should pause at that point in the song addition process. This is to allow for all tracks - including ones that have to be added manually - to be added in their original order.
+
 ## Requirements
 
 * Python 3.7
@@ -42,17 +44,18 @@ pipenv run python3 main.py > main.log
 ```
 
 ## Known Issues
+Spotify requests sometimes time out. 
 Spotify doesn't care about unique playlist names. You can have duplicates so be aware if you run this multiple times.
 
-This will not transfer songs that were uploaded. Spotify does not offer cloud storage. Uploaded songs will be a line item in `errored-tracks.log` as the playlist name (since there is no song name to get)
+This will not transfer songs that were uploaded. Spotify does not offer cloud storage. Uploaded songs will error.
 
-If songs are missing, it's likely they don't exist on Spotify. Its also possible it was not found by search because it relies on the songs having the same name structure. Check `errored-tracks.log` and search them manually.
+If songs are missing, it's likely they don't exist on Spotify. Its also possible it was not found by search because it relies on the songs having the same name structure.
 
-Spotify seems to give random 500s, can't do much about it. Seems to be rare. The script will write the failed tracks to `errored-tracks.log`
+Spotify seems to give random 500s, can't do much about it. Seems to be rare. The script will error the failed tracks.
 
 You might hit a rate limit. I tried on a premium account with thousands of songs and was okay.
 
-Some improvements could be made such as combining the two main python files, adding flags, etc but this would take more time than it is worth considering I needed to transfer some songs once.
+Some improvements could be made but this would take more time than it is worth considering I needed to transfer some songs once. Feel free to open a PR with code improvements!
 
 
 Feel free to fork and/or open a GH issue

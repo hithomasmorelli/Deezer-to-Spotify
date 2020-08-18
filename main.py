@@ -20,8 +20,10 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(lineno)d -- %(me
 # helper function for playlist import y/n choice
 def chooseYesNo(statement):
     choice = None
+    statement = "> " + statement + "?"
+    statement = statement.replace("\n", "\n> ")
     while choice == None:
-        answer = input("> " + statement + "? [y/n]: ")
+        answer = input(statement + " [y/n]: ")
         if answer == "y":
             choice = True
         elif answer == "n":
@@ -112,6 +114,11 @@ def main():
     logging.debug('Loading Spotify')
     spot = Spotify_client()
 
+    # when a track fails, should we pause until it's added (in order to preserve "order of addition"),
+    # or should we just write it to `errored-tracks.log`?
+    waitAfterFailed = chooseYesNo("When the program experiences a failed track, should it pause at\n"
+                                + "that point in the addition process, to allow the song to be manually added")
+
     # Get a full dump of all Deezer playlists
     logging.info('Getting details of Deezer playlists')
     playlists = deezer.get_playlists()
@@ -129,7 +136,8 @@ def main():
             # only get here if the user wants us to import the playlist
             name = playlist.title
 
-            playlists_tracks[name] = []
+            if not playlist.is_loved_track:
+                playlists_tracks[name] = []
 
             # search tracks, add them to the array
             for track in playlist.get_tracks():
@@ -157,7 +165,7 @@ def main():
                         })
                     else:
                         logging.info(f'Adding {track_uri} to playlist array')
-                        playlists_tracks[playlist.title].append({
+                        playlists_tracks[name].append({
                             "title": title,
                             "artist": artist,
                             "track_uri": track_uri,
@@ -166,15 +174,70 @@ def main():
 
                 # cheap way to fix this, almost certainly means the track doesn't exist on spotify
                 except IndexError:
-                    logging.info("Index out of range: This track may not exist or was not found. Skipping")
-                    with open('./errored-tracks.log', 'a') as file:
-                        file.writelines(f'playist: {name} -- {artist} - {title}\n')
+                    if waitAfterFailed:
+                        logging.info("Index out of range: This track may not exist or was not found. Adding to array with track_uri:None")
+                        if not playlist.is_loved_track:
+                            playlists_tracks[name].append({
+                                "title": title,
+                                "artist": artist,
+                                "track_uri": None,
+                                "time_add": time_add
+                            })
+                        else:
+                            favourite_tracks.append({
+                                "title": title,
+                                "artist": artist,
+                                "track_uri": None,
+                                "time_add": time_add
+                            })
+                    else:
+                        logging.info("Index out of range: This track may not exist or was not found. Adding to log")
+                        with open('./errored-tracks.log', 'a') as file:
+                            file.writelines(f'playist: {name} -- {artist} - {title}\n')
                 # cheap fix for random 500 errors
                 except client.SpotifyException:
-                    logging.info("500 error - failed track written to log. It might have been added anyway, check later")
-                    with open('./errored-tracks.log', 'a') as file:
-                        file.writelines(f'playist: {name} -- {artist} - {title}\n')
-
+                    if waitAfterFailed:
+                        logging.info("500 error during search, adding to array with track_uri:None")
+                        if not playlist.is_loved_track:
+                            playlists_tracks[name].append({
+                                "title": title,
+                                "artist": artist,
+                                "track_uri": None,
+                                "time_add": time_add
+                            })
+                        else:
+                            favourite_tracks.append({
+                                "title": title,
+                                "artist": artist,
+                                "track_uri": None,
+                                "time_add": time_add
+                            })
+                    else:
+                        logging.info("500 error during search - track added to log")
+                        with open('./errored-tracks.log', 'a') as file:
+                            file.writelines(f'playist: {name} -- {artist} - {title}\n')
+                except Exception:
+                    # there was some other error, but we gotta carry on
+                    if waitAfterFailed:
+                        logging.info("An unknown error occured, adding to array with track_uid:None")
+                        if not playlist.is_loved_track:
+                            playlists_tracks[name].append({
+                                "title": title,
+                                "artist": artist,
+                                "track_uri": None,
+                                "time_add": time_add
+                            })
+                        else:
+                            favourite_tracks.append({
+                                "title": title,
+                                "artist": artist,
+                                "track_uri": None,
+                                "time_add": time_add
+                            })
+                    else:
+                        logging.info("An unknown error occured - track added to log")
+                        with open('./errored-tracks.log', 'a') as file:
+                            file.writelines(f'playist: {name} -- {artist} - {title}\n')
 
 
     # should we sleep after each song addition to spotify?
@@ -202,22 +265,39 @@ def main():
                     artist = track["artist"]
                     track_uri = track["track_uri"]
 
-                    # add track to the new playlist
-                    logging.info(f'Adding "{title}" ({artist}) [{track_uri}] to {name}')
-                    #todo: speed could be improved with async
-                    playlist_add = spot.add_to_playlist(new_playlist_id, [track_uri])
-                    logging.info('Song added')
-                    logging.debug(playlist_add)
+                    if track_uri is not None:
+                        # add track to the new playlist
+                        logging.info(f'Adding "{title}" ({artist}) [{track_uri}] to {name}')
+                        #todo: speed could be improved with async
+                        playlist_add = spot.add_to_playlist(new_playlist_id, [track_uri])
+                        logging.info('Song added')
+                        logging.debug(playlist_add)
 
-                    # sleep after each song to allow spotify to properly sort them by time added
-                    if sleeping:
-                        sleep(SLEEP_AMOUNT)
+                        # sleep after each song to allow spotify to properly sort them by time added
+                        if sleeping:
+                            sleep(SLEEP_AMOUNT)
+                    else:
+                        # track failed search, give a chance to add now
+                        input(f'> Please add "{title}" ({artist}) to {name} manually, then press Enter to continue...')
 
                 # cheap fix for random 500 errors
                 except client.SpotifyException:
-                    logging.info("500 error - failed track written to log. It might have been added anyway, check later")
-                    with open('./errored-tracks.log', 'a') as file:
-                        file.writelines(f'playist: {name} -- {artist} - {title}\n')
+                    if waitAfterFailed:
+                        logging.info("500 error - track may have been added anyway")
+                        input(f'> Please add "{title}" ({artist}) to {name} manually (if it is not already added), then press Enter to continue...')
+                    else:
+                        logging.info("500 error - failed track written to log. It might have been added anyway, check later")
+                        with open('./errored-tracks.log', 'a') as file:
+                            file.writelines(f'playist: {name} -- {artist} - {title}\n')
+                except Exception:
+                    # any other weird exception
+                    if waitAfterFailed:
+                        logging.info("An unknown error occured")
+                        input(f'> Please add "{title}" ({artist}) to {name} manually (if it is not already added), then press Enter to continue...')
+                    else:
+                        logging.info("An unknown error occured - track added to log")
+                        with open('./errored-tracks.log', 'a') as file:
+                            file.writelines(f'playist: {name} -- {artist} - {title}\n')
 
     # do we have any favourite tracks to add?
     if len(favourite_tracks) != 0:
@@ -231,21 +311,38 @@ def main():
                 artist = track["artist"]
                 track_uri = track["track_uri"]
 
-                # add track to "liked songs"
-                logging.info(f'Adding "{title}" ({artist}) [{track_uri}] to Liked Songs')
-                liked_songs_add = spot.add_to_saved_tracks([track_uri])
-                logging.info('Song added')
-                logging.debug(liked_songs_add)
+                if track_uri is not None:
+                    # add track to "liked songs"
+                    logging.info(f'Adding "{title}" ({artist}) [{track_uri}] to Liked Songs')
+                    liked_songs_add = spot.add_to_saved_tracks([track_uri])
+                    logging.info('Song added')
+                    logging.debug(liked_songs_add)
 
-                # sleep after each song to allow spotify to properly sort them by time added
-                if sleeping:
-                    sleep(SLEEP_AMOUNT)
+                    # sleep after each song to allow spotify to properly sort them by time added
+                    if sleeping:
+                        sleep(SLEEP_AMOUNT)
+                else:
+                    # track failed search, give a chance to add now
+                    input(f'> Please add "{title}" ({artist}) to Liked Songs manually, then press Enter to continue...')
             
             # cheap fix for random 500 errors
             except client.SpotifyException:
-                logging.info("500 error - failed track written to log. It might have been added anyway, check later")
-                with open('./errored-tracks.log', 'a') as file:
-                    file.writelines(f'playist: {name} -- {artist} - {title}\n')
+                if waitAfterFailed:
+                    logging.info("500 error - track may have been added anyway")
+                    input(f'> Please add "{title}" ({artist}) to Liked Songs manually (if it is not already added), then press Enter to continue...')
+                else:
+                    logging.info("500 error - failed track written to log. It might have been added anyway, check later")
+                    with open('./errored-tracks.log', 'a') as file:
+                        file.writelines(f'playist: Liked Songs -- {artist} - {title}\n')
+            except Exception:
+                # any other weird exception
+                if waitAfterFailed:
+                    logging.info("An unknown error occured")
+                    input(f'> Please add "{title}" ({artist}) to {name} manually (if it is not already added), then press Enter to continue...')
+                else:
+                    logging.info("An unknown error occured - track added to log")
+                    with open('./errored-tracks.log', 'a') as file:
+                        file.writelines(f'playist: {name} -- {artist} - {title}\n')
 
 
 if __name__ == "__main__":
