@@ -7,9 +7,9 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-gmusicapi = "*"
 spotipy = "*"
 python-dotenv = "*"
+deezer-python = {git = "https://github.com/hithomasmorelli/deezer-python.git", ref = "fix-track-list-truncation"}
 
 [requires]
 python_version = "3.7"
