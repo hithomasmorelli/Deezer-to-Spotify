@@ -65,12 +65,11 @@
         },
         "spotipy": {
             "hashes": [
-                "sha256:2670ad5715d5bd53a353708eea0ab2aa154232e2fe25d826dc39da5b910f0e17",
-                "sha256:4564a6b05959deb82acc96a3fe6883db1ad9f8c73b7ff3b9f1f44db43feba0b8",
-                "sha256:9d4f0c5857a2c9bb72b39d66e38182ccaf62bcf18a5a16b4f2be8e802eca2f2c"
+                "sha256:1164f4bb327a2b98492a020d120f095dafcdb86e7f99ad2fdfb5bdd95eb4493a",
+                "sha256:29c60c8b99da1c4b9f0d722169bc31e624b8c07d7186b8eadd9c02e8d2d42cbf"
             ],
             "index": "pypi",
-            "version": "==2.16.1"
+            "version": "==2.17.1"
         },
         "urllib3": {
             "hashes": [
